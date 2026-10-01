@@ -1,0 +1,151 @@
+/* =============================================================
+   Design tokens — change colors, spacing and type in this file only.
+   Style: a Persian manuscript kept as a scrapbook. Ruled frames (jadval),
+   cartouche headings and stitch lines from the manuscript; blush paper,
+   dusty rose, sparkles and pressed-flower collage for a lighter, slightly
+   fanciful magazine. Frames stay square; things you press are soft.
+   Lapis, madder and gold were sampled from the article photographs.
+   ============================================================= */
+
+/* Estedad, one variable file (120 KB), SIL OFL — free for commercial use.
+   Weight axis 100–900; there is no width axis, so hierarchy is carried by
+   weight, size and measure instead. */
+@font-face {
+  font-family: 'Estedad';
+  src: url('../fonts/Estedad-VF.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Amiri, a classical naskh (SIL OFL), subset to Persian + basic Latin: 60 KB.
+   Display only — the giant scene title, section headings and the logo. */
+@font-face {
+  font-family: 'Amiri';
+  src: url('../fonts/Amiri-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+:root {
+  /* ---- color ---- */
+  --color-background: #f7ede4;
+  --color-foreground: #3d3531;
+  --color-card: #fdf7f1;
+  --color-primary: #3d3531;
+  --color-on-primary: #f7ede4;
+  --color-secondary: #56473f;
+  --color-accent: #9e2f45;
+  --color-accent-soft: #f3dde0;
+  --color-on-accent: #ffffff;
+  --color-muted: #efdccd;
+  --color-muted-foreground: #6a5850;
+  --color-border: #e2c6b8;
+  --color-destructive: #b3261e;
+  --color-success: #2f6b3f;
+  --color-ring: #26447c;
+  --color-ink-dim: #8a7a66;
+
+  /* Manuscript colours. Gold and rose are for rules and ornament only: they
+     fail contrast as text; --color-rose-ink is the rose that can be read. */
+  --color-paper-deep: #efdccd;
+  --color-rose: #d58b99;
+  --color-rose-ink: #954560;
+  --color-lapis: #26447c;
+  --color-cinnabar: #b74327;
+  --color-gold: #a27f3c;
+
+  /* A ruled frame (jadval): gold hairline, a strip of paper, lapis line.
+     Drawn with inset shadows so it never changes the box size. */
+  --jadval: inset 0 0 0 1px var(--color-gold),
+            inset 0 0 0 5px var(--color-card),
+            inset 0 0 0 6px var(--color-lapis);
+  /* A cartouche (katibeh): double rules above and below a heading slab.
+     The middle stop repaints the slab colour to open the gap between rules. */
+  --kitibeh: inset 0 1px 0 var(--color-gold),
+             inset 0 4px 0 var(--color-paper-deep),
+             inset 0 5px 0 var(--color-lapis),
+             inset 0 -1px 0 var(--color-gold),
+             inset 0 -4px 0 var(--color-paper-deep),
+             inset 0 -5px 0 var(--color-lapis);
+  --radius-soft: 999px;  /* buttons, chips: the things you press */
+  /* A running stitch in rose thread, used where a plain hairline used to be. */
+  --stitch: repeating-linear-gradient(to left, var(--color-rose) 0 7px, transparent 7px 12px);
+
+  /* ---- type ----
+     Hierarchy comes from weight and size, not from a width axis. Display type
+     is heavy and set tight; standfirsts are light and set at a longer measure.
+     Persian letters join, so wide letter-spacing pulls words apart — tracking
+     stays near zero on Persian text. */
+  --font-sans: 'Estedad', 'Segoe UI', Tahoma, system-ui, sans-serif;
+  --font-display: 'Amiri', 'Times New Roman', serif;
+  /* Amiri's Latin is a book serif; set in spaced capitals it gives the
+     English section names their printed-masthead look. */
+  --tracking-caps: 0.32em;
+
+  --w-display: 800;
+  --w-label: 700;
+  --w-lead: 300;
+  --w-body: 400;
+
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: clamp(1.75rem, 1.1rem + 2vw, 2.5rem);
+  --text-3xl: clamp(2.1rem, 1.2rem + 3.4vw, 3.9rem);
+  --text-4xl: clamp(2.6rem, 1.1rem + 5.6vw, 5.5rem);
+  --text-5xl: clamp(2.9rem, 1rem + 6.6vw, 6.25rem);
+  --leading-display: 1.14;
+  --leading-tight: 1.35;
+  --leading-normal: 1.85;
+  --leading-loose: 2;
+  /* Kept for the few Latin/numeric labels; Persian text must not use it. */
+  --tracking-label: 0.08em;
+  --tracking-display: -0.015em;
+
+  /* ---- space (spacious scale) ---- */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 48px;
+  --space-6: 72px;
+  --space-7: 112px;
+  --space-8: 160px;
+
+  /* ---- shape & depth ---- */
+  --radius-sm: 0;
+  --radius: 0;
+  --radius-lg: 0;
+  --shadow-sm: none;
+  --shadow: 0 14px 30px -26px rgb(61 51 38 / 45%);
+  --shadow-lg: none;
+
+  /* ---- motion ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 160ms;
+  --dur: 280ms;
+  --dur-slow: 620ms;
+
+  /* ---- layout ---- */
+  --container: 1280px;
+  --container-narrow: 720px;
+  --header-height: 72px;
+}
+
+/* The dark closing section reuses the same token names, flipped. */
+/* Soot black, like the night ground of the Miraj-nameh folios. */
+.is-inverted {
+  --color-background: #1f1f1f;
+  --color-foreground: #f7ede4;
+  --color-card: #2a2825;
+  --color-border: #3a3631;
+  --color-muted: #313234;
+  --color-muted-foreground: #c4aea4;
+  --color-primary: #f7ede4;
+  --color-on-primary: #1f1f1f;
+  --color-ink-dim: #8f8577;
+}

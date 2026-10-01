@@ -1,0 +1,6 @@
+{
+  "count": 19,
+  "pattern": "frame_%04d.webp",
+  "width": 1000,
+  "source": "tools/build_art.py benefits"
+}

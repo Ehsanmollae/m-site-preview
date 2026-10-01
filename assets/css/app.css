@@ -1,0 +1,1614 @@
+/* =============================================================
+   Base + components. Tokens live in theme.css.
+   ============================================================= */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  font-weight: var(--w-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Display type is narrow and heavy — a masthead cut. Body and standfirsts
+   stay at normal or wide width, and the jump between the two carries the
+   hierarchy instead of size alone. */
+h1, h2, h3, h4 {
+  margin: 0 0 var(--space-2);
+  line-height: var(--leading-display);
+  font-weight: var(--w-display);
+  letter-spacing: var(--tracking-display);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-xl); line-height: var(--leading-tight); }
+h4 { font-size: var(--text-lg); line-height: var(--leading-tight); }
+
+/* Wide, thin standfirst — the opposite end of the width axis from a heading. */
+.lead {
+  font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.6rem);
+  font-weight: var(--w-lead);
+  line-height: 1.55;
+  max-width: 34ch;
+}
+
+p { margin: 0 0 var(--space-2); }
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: inherit;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 4px;
+  transition: color var(--dur) var(--ease-out);
+}
+a:hover { color: var(--color-accent); }
+
+img, svg, video { max-width: 100%; height: auto; display: block; }
+
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--space-2);
+  top: -100px;
+  z-index: 200;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  transition: top var(--dur) var(--ease-out);
+}
+.skip-link:focus { top: var(--space-2); color: var(--color-on-primary); }
+
+/* ------------------------------------------------------------ layout */
+
+.container {
+  width: min(100% - 2 * var(--space-3), var(--container));
+  margin-inline: auto;
+}
+.container--narrow { width: min(100% - 2 * var(--space-3), var(--container-narrow)); }
+
+.section {
+  padding-block: var(--space-7);
+  position: relative;
+}
+.section--tight { padding-block: var(--space-6); }
+
+/* Section headings sit in a cartouche (katibeh), as a manuscript heads a
+   chapter; the standfirst follows underneath, never beside it. */
+.section-head { margin-bottom: var(--space-5); }
+.section-head h2 {
+  display: inline-block;
+  margin: 0;
+  padding: 0.22em 0.75em 0.38em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: var(--color-foreground);
+  background: var(--color-paper-deep);
+  box-shadow: var(--kitibeh);
+}
+/* A small sparkle sits before every cartouche, the magazine's ornament. */
+.section-head h2::before,
+.about__text > h2::before,
+.folio__title::before {
+  content: '\2726';
+  display: inline-block;
+  margin-inline-end: 0.45em;
+  color: var(--color-rose);
+  font-size: 0.42em;
+  vertical-align: 0.5em;
+}
+.section-head p:not(.en-caps) {
+  color: var(--color-muted-foreground);
+  font-size: clamp(1.05rem, 0.9rem + 0.7vw, 1.4rem);
+  font-weight: var(--w-lead);
+  line-height: 1.6;
+  max-width: 40ch;
+  margin-top: var(--space-3);
+}
+
+/* English section names, printed in spaced capitals over the Persian
+   cartouche. Latin only: spacing would pull joined Persian letters apart. */
+.en-caps {
+  display: block;
+  margin: 0 0 var(--space-2);
+  color: var(--color-rose-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  line-height: 1.4;
+  text-transform: uppercase;
+  text-wrap: balance;
+  direction: ltr;
+  text-align: right;
+}
+.is-inverted .en-caps { color: var(--color-rose); }
+
+/* Narrow and bold rather than letterspaced: Persian letters join, and wide
+   tracking visibly pulls a word apart. */
+.eyebrow {
+  display: inline-block;
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+  color: var(--color-foreground);
+  margin-bottom: var(--space-3);
+}
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: var(--color-accent);
+  vertical-align: middle;
+  margin-inline-end: 12px;
+}
+
+/* ------------------------------------------------------------ buttons */
+
+.btn {
+  --btn-bg: var(--color-primary);
+  --btn-fg: var(--color-on-primary);
+  --btn-line: var(--btn-bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 14px 34px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-line);
+  border-radius: var(--radius-soft);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out),
+              border-color var(--dur) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.btn:active { transform: translateY(1px); }
+/* The main call to action carries a sparkle each side, as the magazine
+   prints its order button. */
+.btn--accent::before,
+.btn--accent::after { content: '\2727'; font-size: 0.8em; line-height: 1; opacity: 0.85; }
+/* Buttons invert instead of lifting. */
+.btn:hover {
+  --btn-bg: transparent;
+  --btn-fg: var(--color-foreground);
+  --btn-line: var(--color-foreground);
+  color: var(--btn-fg);
+}
+
+.btn--accent { --btn-bg: var(--color-accent); --btn-fg: var(--color-on-accent); }
+.btn--accent:hover { --btn-fg: var(--color-accent); --btn-line: var(--color-accent); }
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--color-foreground);
+  --btn-line: var(--color-foreground);
+}
+.btn--ghost:hover {
+  --btn-bg: var(--color-primary);
+  --btn-fg: var(--color-on-primary);
+  --btn-line: var(--color-primary);
+}
+.btn--block { width: 100%; }
+.btn[disabled] { opacity: 0.55; pointer-events: none; }
+
+/* ------------------------------------------------------------ header */
+
+/* A paper bar over the page; a stitch appears under it once the page has
+   scrolled. */
+.site-header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 60;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  color: var(--color-foreground);
+  transition: transform var(--dur-slow) var(--ease-out), color var(--dur) var(--ease-out),
+    background-color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out);
+}
+.site-header {
+  background: color-mix(in srgb, var(--color-background) 82%, transparent);
+  backdrop-filter: saturate(140%) blur(12px);
+}
+.site-header::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  color: var(--color-border);
+  background: var(--stitch);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out);
+}
+.site-header.is-stuck::after { opacity: 1; }
+.site-header.is-hidden { transform: translateY(-100%); }
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+/* Logo on the reading edge, nav centred, order tracking opposite — the same
+   three-column bar as the cinematic reference. */
+@media (min-width: 1024px) {
+  .site-header .container {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) auto minmax(200px, 1fr);
+    gap: 32px;
+  }
+}
+
+.site-logo {
+  justify-self: start;
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1;
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.site-logo:hover { color: inherit; opacity: 0.75; }
+
+.nav {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 2.2vw, 44px);
+}
+@media (min-width: 1024px) { .nav { display: flex; } }
+.nav a {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  color: inherit;
+  text-decoration: none;
+}
+.nav a:hover { color: inherit; opacity: 0.7; }
+
+.nav-end {
+  display: none;
+  justify-self: end;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  color: inherit;
+  text-decoration: none;
+}
+@media (min-width: 1024px) { .nav-end { display: inline-flex; } }
+.nav-end:hover { color: inherit; opacity: 0.7; }
+
+.nav-toggle {
+  display: grid;
+  gap: 5px;
+  width: 24px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+@media (min-width: 1024px) { .nav-toggle { display: none; } }
+.nav-toggle span {
+  height: 2px;
+  width: 24px;
+  background: currentColor;
+}
+.nav-toggle span:last-child { width: 16px; }
+
+/* ------------------------------------------------------------ mobile menu overlay */
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 500ms cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.mobile-menu.is-open { opacity: 1; visibility: visible; }
+.mobile-menu__close {
+  position: absolute;
+  top: var(--space-4);
+  inset-inline-end: var(--space-3);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--color-background) 30%, transparent);
+  background: none;
+  color: inherit;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.mobile-menu__close:hover { border-color: color-mix(in srgb, var(--color-background) 80%, transparent); }
+.mobile-menu__links { list-style: none; margin: 0; padding: 0; text-align: center; }
+.mobile-menu__links li {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+  transition-delay: calc(var(--i) * 60ms);
+}
+.mobile-menu.is-open .mobile-menu__links li { opacity: 1; transform: translateY(0); }
+.mobile-menu__links a {
+  display: block;
+  padding-block: var(--space-2);
+  color: color-mix(in srgb, var(--color-background) 60%, transparent);
+  text-decoration: none;
+  font-size: var(--text-2xl);
+  font-weight: var(--w-lead);
+}
+.mobile-menu__links a:hover,
+.mobile-menu__links a[aria-current="page"] { color: var(--color-background); }
+.mobile-menu__foot {
+  position: absolute;
+  bottom: var(--space-4);
+  display: flex;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+  color: color-mix(in srgb, var(--color-background) 60%, transparent);
+}
+html:has(.mobile-menu.is-open) { overflow: hidden; }
+
+/* reading progress */
+.progress-bar {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  z-index: 70;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: right center;
+  will-change: transform;
+}
+
+/* section dots (desktop only) */
+.dot-nav {
+  position: fixed;
+  inset-inline-end: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 55;
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 1180px) { .dot-nav { display: flex; } }
+.dot-nav { transition: opacity var(--dur) var(--ease-out); }
+.dot-nav.is-away { opacity: 0; pointer-events: none; }
+
+/* Rules, not dots — the editorial equivalent of a page marker. */
+.dot-nav a {
+  display: block;
+  width: 22px; height: 1px;
+  background: var(--color-foreground);
+  opacity: 0.32;
+  transition: opacity var(--dur) var(--ease-out), width var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out);
+}
+.dot-nav a:hover,
+.dot-nav a:focus-visible { opacity: 1; width: 34px; }
+.dot-nav a.is-active { background: var(--color-accent); opacity: 1; width: 34px; }
+.dot-nav .dot-label {
+  position: absolute;
+  inset-inline-end: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease-out);
+}
+.dot-nav li { position: relative; min-height: 10px; }
+.dot-nav li:hover .dot-label,
+.dot-nav a:focus-visible + .dot-label { opacity: 1; }
+
+/* ------------------------------------------------------------ hero: one manuscript folio */
+
+/* A painted leaf on the reading page: the copy on the reading edge, the folio
+   opposite. No pin and no layer stack; the only motion is the reveal and, when
+   the figure exists as its own cut-out, a slow drift between figure and page. */
+.folio {
+  position: relative;
+  padding-block: calc(var(--header-height) + var(--space-4)) var(--space-6);
+}
+.folio__grid {
+  display: grid;
+  gap: var(--space-5);
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .folio {
+    display: grid;
+    align-items: center;
+    min-height: 100svh;
+    padding-block: calc(var(--header-height) + var(--space-3)) var(--space-5);
+  }
+  .folio__grid {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(var(--space-5), 6vw, var(--space-7));
+  }
+}
+
+/* The title sits in a cartouche (katibeh), the way a manuscript heads a page. */
+.folio__title {
+  display: inline-block;
+  margin: 0 0 var(--space-4);
+  padding: 0.24em 0.7em 0.4em;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 1.2rem + 4vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0;
+  background: var(--color-paper-deep);
+  box-shadow: var(--kitibeh);
+}
+.folio__lead {
+  max-width: 34ch;
+  margin-bottom: var(--space-4);
+  color: var(--color-secondary);
+  font-size: clamp(1.1rem, 0.95rem + 0.6vw, 1.4rem);
+  font-weight: var(--w-lead);
+  line-height: 1.75;
+}
+.folio__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-lapis);
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+}
+.hero-tags li + li::before {
+  content: '\2727';
+  margin-inline: 10px;
+  color: var(--color-rose);
+  font-size: 0.8em;
+}
+
+/* The leaf keeps its own margins and deckle and is pasted into the page a
+   little askew, as in a scrapbook. Width follows the viewport height so the
+   whole leaf stays in the first screen. */
+.folio { overflow-x: clip; }
+.folio__art {
+  position: relative;
+  justify-self: center;
+  width: min(100%, calc(62svh * 0.75));
+  aspect-ratio: 3 / 4;
+  margin: 0;
+  rotate: -1.2deg;
+}
+@media (min-width: 900px) {
+  .folio__art { width: min(540px, calc((100svh - var(--header-height) - var(--space-6)) * 0.75)); }
+}
+.folio__page {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
+/* The woman cut from the painting, placed by her own box (inline style from
+   hero-figure.json) and drifting at another rate than the page behind her. */
+.folio__figure {
+  position: absolute;
+  z-index: 1;
+  max-width: none;
+  will-change: transform;
+}
+.js .folio__art[data-reveal] .folio__figure { opacity: 0; translate: 0 12px; }
+.js .folio__art[data-reveal].is-visible .folio__figure {
+  opacity: 1;
+  translate: 0 0;
+  transition: opacity var(--dur-slow) var(--ease-out) 700ms, translate var(--dur-slow) var(--ease-out) 700ms;
+}
+.folio__page { box-shadow: 0 1px 0 rgb(61 51 38 / 14%), 0 26px 40px -30px rgb(61 51 38 / 60%); }
+
+/* Scrapbook pieces around the leaf. Sizes are fractions of the leaf so the
+   arrangement scales with it; each drifts at its own rate (data-parallax).
+   The paper scrap and sprig sit behind the leaf, the rest on top of it. */
+.collage {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+  will-change: transform;
+  filter: drop-shadow(0 6px 8px rgb(61 51 38 / 18%));
+}
+.collage--paper { z-index: 0; width: 56%; top: -6%; inset-inline-end: -10%; rotate: 7deg; }
+.collage--sprig { z-index: 0; width: 58%; bottom: 4%; inset-inline-start: -30%; rotate: -24deg; }
+.collage--tape  { z-index: 2; width: 40%; top: -3.5%; left: 30%; rotate: -5deg; filter: none; opacity: 0.92; }
+.collage--stamp { z-index: 2; width: 26%; top: 6%; inset-inline-start: -11%; rotate: -9deg; }
+.collage--rose  { z-index: 2; width: 36%; bottom: -7%; inset-inline-end: -8%; rotate: 14deg; }
+@media (max-width: 899px) {
+  .collage--paper, .collage--sprig { display: none; }
+  .collage--stamp { inset-inline-start: -5%; }
+  .collage--rose  { inset-inline-end: -6%; width: 32%; }
+}
+
+/* The pieces are laid down after the leaf has unrolled. */
+.js .folio__art[data-reveal] .collage { opacity: 0; scale: 0.9; }
+.js .folio__art[data-reveal].is-visible .collage {
+  opacity: 1;
+  scale: 1;
+  transition: opacity var(--dur-slow) var(--ease-out) 900ms, scale var(--dur-slow) var(--ease-out) 900ms;
+}
+.js .folio__art[data-reveal].is-visible .collage--stamp { transition-delay: 1050ms; }
+.js .folio__art[data-reveal].is-visible .collage--rose  { transition-delay: 1200ms; }
+
+/* The leaf unrolls from the top instead of fading, like a page laid down.
+   The clip sits on the images, not on the observed figure: an element that
+   clips itself away never reports as intersecting. */
+.js .folio__art[data-reveal] { opacity: 1; transform: none; }
+.js .folio__art[data-reveal] .folio__page { clip-path: inset(0 -48px 100% -48px); }
+.js .folio__art[data-reveal].is-visible .folio__page {
+  clip-path: inset(-48px -48px -72px -48px);
+  transition: clip-path 1100ms var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .folio__art[data-reveal] .folio__page { clip-path: none !important; }
+  .js .folio__art[data-reveal] .collage { opacity: 1 !important; scale: 1 !important; }
+  .js .folio__art[data-reveal] .folio__figure { opacity: 1 !important; translate: none !important; }
+}
+
+/* ------------------------------------------------------------ article cards */
+
+/* Cards run past the container toward the page edge; the section clips them
+   there. Without JS it is a native scroll-snap row; on desktop cinema.js turns
+   it into an endless slider (.is-sliding). */
+.articles { overflow: clip; }
+/* While sliding, the reading edge is cut at the column so the row starts
+   cleanly under the heading; the far edge still runs out to the viewport. */
+.articles.is-sliding > .container { clip-path: inset(-40px -4px -40px -100vw); }
+
+.sights-track {
+  display: flex;
+  gap: clamp(16px, 1.4vw, 24px);
+  align-items: stretch;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-block: 4px 20px;
+  scrollbar-width: thin;
+}
+.articles.is-sliding .sights-track {
+  overflow: visible;
+  transform: translate3d(var(--sights-shift, 0px), 0, 0);
+  transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.articles.is-sliding .sights-track.is-jumping { transition: none; }
+
+/* A folio card: sharp corners, a ruled frame, no soft shadow. */
+.sight-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 clamp(290px, 24vw, 360px);
+  min-height: 290px;
+  padding: 28px;
+  color: var(--color-foreground);
+  background: var(--color-card);
+  box-shadow: var(--jadval);
+  scroll-snap-align: start;
+}
+.sight-kicker,
+.article-cat {
+  display: block;
+  max-width: calc(100% - 76px);
+  color: var(--color-lapis);
+  font-size: var(--text-xs);
+  font-weight: var(--w-label);
+  line-height: 1.4;
+}
+/* The English section name over the Persian one, as in the category filter. */
+.cat-en {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--color-rose-ink);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  direction: ltr;
+  text-align: right;
+}
+.article-cat { margin-bottom: var(--space-3); text-decoration: none; }
+.article-cat:hover { color: var(--color-accent); }
+
+/* Category filter: plain links, pills like the magazine's buttons. */
+.cat-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: calc(-1 * var(--space-2)) 0 var(--space-4);
+}
+.cat-filter a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 4px 16px;
+  color: var(--color-foreground);
+  border: 1px solid var(--color-rose);
+  border-radius: var(--radius-soft);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+}
+.cat-filter a:hover { background: var(--color-accent-soft); color: var(--color-foreground); }
+.cat-filter a[aria-current] { background: var(--color-rose); border-color: var(--color-rose); color: var(--color-foreground); }
+.cat-filter .cat-en { display: inline; margin: 0; font-size: 0.62rem; letter-spacing: 0.18em; }
+.sight-pin {
+  position: absolute;
+  top: 18px;
+  inset-inline-end: 18px;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.sight-card h3 {
+  display: -webkit-box;
+  margin: auto 0 0;
+  padding-top: var(--space-5);
+  font-size: var(--text-xl);
+  font-weight: var(--w-display);
+  line-height: 1.35;
+  letter-spacing: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.sight-card h3 a { color: inherit; text-decoration: none; }
+.sight-card h3 a:hover { color: var(--color-accent); }
+/* The whole card opens the article; the buy button sits above that link. */
+.sight-card h3 a::after { content: ''; position: absolute; inset: 0; z-index: 0; }
+.sight-card p {
+  display: -webkit-box;
+  margin: 8px 0 0;
+  color: var(--color-muted-foreground);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.sight-foot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 16px;
+}
+.sight-foot::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  color: var(--color-gold);
+  background: var(--stitch);
+}
+.sight-price { font-size: var(--text-base); font-weight: var(--w-label); }
+.sight-price.is-free { color: var(--color-success); }
+.sight-buy {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 22px;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border-radius: var(--radius-soft);
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+  text-decoration: none;
+  transition: background-color var(--dur) var(--ease-out);
+}
+.sight-buy:hover { color: var(--color-on-accent); background: #82263a; }
+
+.sights-empty { margin: 0; color: var(--color-muted-foreground); }
+
+.sights-controls { display: none; }
+.articles.is-sliding .sights-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: var(--space-3);
+}
+.sight-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  color: var(--color-foreground);
+  background: transparent;
+  border: 1px solid var(--color-rose);
+  border-radius: 50%;
+  font: inherit;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+}
+.sight-nav:hover { color: var(--color-on-primary); background: var(--color-primary); }
+
+/* Pasted, not typeset: each card sits a hair off square, alternating, and
+   straightens when you reach for it. */
+.sight-card { rotate: -0.6deg; transition: rotate var(--dur) var(--ease-out), translate var(--dur) var(--ease-out); }
+.sight-card:nth-child(even) { rotate: 0.5deg; }
+.sight-card:nth-child(3n) { rotate: -0.25deg; }
+.sight-card:hover,
+.sight-card:focus-within { rotate: 0deg; translate: 0 -3px; }
+.sight-pin { rotate: 8deg; }
+@media (prefers-reduced-motion: reduce) {
+  .sight-card { transition: none; }
+}
+
+/* Phones: the filter is one row that scrolls sideways, and the cards run to
+   the screen edge so the next one peeks in. */
+@media (max-width: 899px) {
+  .cat-filter {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-inline: calc(-1 * var(--space-3));
+    padding: 2px var(--space-3) 6px;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to left, #000 88%, transparent);
+            mask-image: linear-gradient(to left, #000 88%, transparent);
+  }
+  .cat-filter::-webkit-scrollbar { display: none; }
+  .cat-filter a { flex: 0 0 auto; min-height: 38px; }
+  .cat-filter .cat-en { display: none; }
+
+  .sights-track {
+    margin-inline: calc(-1 * var(--space-3));
+    padding: 10px var(--space-3) 24px;
+    scroll-padding-inline: var(--space-3);
+    gap: 14px;
+    scrollbar-width: none;
+  }
+  .sights-track::-webkit-scrollbar { display: none; }
+  .sight-card { flex-basis: min(80vw, 320px); min-height: 0; padding: 24px 22px 22px; }
+  .sight-card h3 { padding-top: var(--space-4); font-size: var(--text-lg); }
+  .sight-pin { width: 56px; height: 56px; top: 14px; inset-inline-end: 14px; }
+}
+
+/* ------------------------------------------------------------ generic pinned-video sections (steps, benefits) */
+
+/* Same base/pinned split as .intro: safe stacked sections until cinema.js
+   confirms motion is wanted and adds .is-pinned. --cine-height is set inline
+   per section (it depends on how many scenes/items it holds). */
+.cine__scene {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: calc(var(--header-height) + var(--space-6)) var(--space-6);
+  background: var(--color-background);
+}
+.cine__canvas, .cine__fallback { display: none; }
+
+/* A dark section (the steps, on black leather) repaints its own text. */
+.cine.is-inverted { color: var(--color-foreground); background: var(--color-background); }
+
+.cine.is-pinned { position: relative; height: var(--cine-height, auto); }
+.cine.is-pinned .cine__stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.cine.is-pinned .cine__canvas,
+.cine.is-pinned .cine__fallback {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cine.is-pinned .cine__canvas { opacity: 0; transition: opacity var(--dur-slow) var(--ease-out); }
+.cine.is-pinned .cine__stage.is-scrubbing .cine__canvas { opacity: 1; }
+.cine.is-pinned .cine__stage.is-scrubbing .cine__fallback { opacity: 0; }
+.cine.is-pinned .cine__canvas,
+.cine.is-pinned .cine__fallback { transform-origin: 50% 45%; will-change: transform; }
+
+/* Same light falloff as the intro stage, mirrored: the lit corner is on the
+   reading edge so the copy always sits in the light. */
+.cine.is-pinned .cine__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(130% 110% at 82% 22%,
+      transparent 0%,
+      color-mix(in srgb, var(--color-background) 34%, transparent) 52%,
+      color-mix(in srgb, var(--color-background) 76%, transparent) 100%),
+    linear-gradient(to top,
+      var(--color-background) 0%,
+      color-mix(in srgb, var(--color-background) 70%, transparent) 22%,
+      transparent 58%);
+}
+.cine.is-pinned .cine__scene { z-index: 2; }
+.cine.is-pinned .cine__scene { position: absolute; inset: 0; background: none; pointer-events: none; }
+.cine.is-pinned .cine__scene.is-live { pointer-events: auto; }
+
+.cine__panel {
+  background: color-mix(in srgb, var(--color-background) 42%, transparent);
+  padding: var(--space-5) var(--space-4);
+}
+@media (min-width: 900px) { .cine__panel { padding: var(--space-5); } }
+/* The steps scenes sit on the video itself; only their copy needs backing. */
+.steps__panel { background: none; padding-inline: 0; }
+
+/* Not pinned (phones for benefits, no JS, reduced motion): the finished
+   frame stands above the copy as a still, and the scenes stack in flow. */
+.cine__still {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: var(--focus, 50%) 50%;
+}
+.cine.is-pinned .cine__still { display: none; }
+.cine:not(.is-pinned) .cine__scene {
+  min-height: 0;
+  padding-block: var(--space-5) var(--space-6);
+}
+.cine:not(.is-pinned) .cine__panel { background: none; padding-inline: 0; }
+@media (max-width: 899px) {
+  .cine__still { aspect-ratio: 5 / 4; }
+  /* Pinned on a phone, the frame is drawn as a band across the top half
+     (see drawScrubFrame); the copy sits below it on solid ground. */
+  .cine.is-pinned .cine__stage::after {
+    background: linear-gradient(to top,
+      var(--color-background) 0%,
+      var(--color-background) 38%,
+      color-mix(in srgb, var(--color-background) 0%, transparent) 56%);
+  }
+  .cine.is-pinned .cine__scene { align-items: flex-end; padding-block: 0 var(--space-5); }
+  .cine.is-pinned .cine__canvas,
+  .cine.is-pinned .cine__fallback { transform: none !important; }
+  .cine.is-pinned .cine__fallback { object-position: var(--focus, 50%) 50%; height: 50%; top: 64px; }
+}
+
+/* ------------------------------------------------------------ articles */
+
+/* A lookbook of plates. Each article is a portrait image with its title set on
+   a paper slab that overlaps the image's lower edge — depth from overlap and a
+   hairline, never from a shadow or a card border. */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: none;
+  border: 0;
+}
+
+.card__cover {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background: var(--color-muted);
+  overflow: hidden;
+}
+.card__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.card__cover--empty {
+  display: grid;
+  place-items: center;
+  color: var(--color-ink-dim);
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+}
+
+/* Category chip, printed on the plate itself. */
+.card__kicker {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  padding: 6px 14px;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-size: var(--text-xs);
+  font-weight: var(--w-label);
+}
+
+.card__body {
+  position: relative;
+  z-index: 1;
+  margin-top: -46px;
+  margin-inline-end: var(--space-5);
+  padding-block-start: var(--space-2);
+  padding-inline-end: var(--space-2);
+  background: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.card__title {
+  font-size: var(--text-xl);
+  margin: 0;
+  max-width: 18ch;
+}
+.card__title a {
+  text-decoration: none;
+  background-image: linear-gradient(var(--color-accent), var(--color-accent));
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-size: 0 1px;
+  transition: background-size var(--dur-slow) var(--ease-out);
+}
+.card:hover .card__title a,
+.card__title a:focus-visible { background-size: 100% 1px; }
+
+.card__excerpt {
+  color: var(--color-muted-foreground);
+  font-size: var(--text-sm);
+  margin: 0;
+  max-width: 34ch;
+}
+
+.tags { display: flex; flex-wrap: wrap; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.tag {
+  font-size: var(--text-xs);
+  font-weight: var(--w-label);
+  color: var(--color-muted-foreground);
+}
+.tag + .tag::before { content: '/'; margin-inline-end: 14px; color: var(--color-ink-dim); }
+
+.card__foot {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  background: var(--stitch) top / 100% 1px no-repeat;
+}
+.price {
+  font-size: var(--text-lg);
+  font-weight: var(--w-display);
+}
+.price--free { color: var(--color-success); }
+.card__foot .btn { min-height: 40px; padding: 9px 20px; }
+
+/* ------------------------------------------------------------ about */
+
+/* An editorial spread: the portrait runs past the column toward the page edge
+   and the text column starts lower, so the two never sit in a tidy 50/50 row. */
+/* Without a portrait the text stands alone, centred on a narrower measure. */
+.about__grid--solo { max-width: 46rem; margin-inline: auto; }
+.about__grid--solo .about__text { margin-top: 0 !important; border: 0 !important; padding: 0 !important; }
+.about__grid--solo .about__text > h2 { margin-inline-start: 0 !important; }
+.about__grid {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 900px) {
+  .about__grid { grid-template-columns: 0.92fr 1.08fr; gap: 0; align-items: start; }
+  .about__media { margin-inline-start: calc(-1 * var(--space-5)); }
+  .about__text {
+    position: relative;
+    z-index: 1;
+    margin-top: var(--space-7);
+    padding-inline-start: var(--space-5);
+    border-inline-start: 1px solid var(--color-border);
+  }
+  /* The heading breaks out of its column and crosses the portrait's edge —
+     the overlap is what puts the two planes at different distances. */
+  .about__text > h2 { margin-inline-start: calc(-1 * var(--space-7)); }
+}
+/* Same cartouche as the section heads. */
+.about__text > h2 {
+  display: inline-block;
+  padding: 0.22em 0.75em 0.38em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0;
+  background: var(--color-paper-deep);
+  box-shadow: var(--kitibeh);
+}
+.about__media,
+.about__text { will-change: transform; }
+
+.about__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-muted);
+}
+.about__media img { width: 100%; height: 100%; object-fit: cover; }
+/* A ruled frame drawn over the portrait, like a painting's jadval. */
+.about__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: var(--jadval);
+  pointer-events: none;
+}
+
+/* First paragraph reads as the standfirst, the rest as body copy. */
+.about__text > p:first-of-type {
+  font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.6rem);
+  font-weight: var(--w-lead);
+  line-height: 1.55;
+  max-width: 34ch;
+  margin-bottom: var(--space-3);
+}
+.about__text > p { max-width: 52ch; color: var(--color-muted-foreground); }
+.about__text > p:first-of-type { color: var(--color-foreground); }
+
+/* Stats read as a printed strip, not as boxes. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0;
+  margin-top: var(--space-6);
+  padding: 0;
+  list-style: none;
+  background: var(--stitch) top / 100% 1px no-repeat;
+}
+.stats li {
+  padding: var(--space-2) var(--space-2) var(--space-2) 0;
+  border-inline-end: 1px solid var(--color-border);
+}
+.stats li:last-child { border-inline-end: 0; }
+.stats li + li { padding-inline-start: var(--space-2); }
+.stats strong {
+  display: block;
+  font-size: var(--text-2xl);
+  font-weight: var(--w-display);
+  line-height: 1;
+  color: var(--color-accent);
+}
+.stats span {
+  display: block;
+  margin-top: 6px;
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+  color: var(--color-muted-foreground);
+}
+
+/* ------------------------------------------------------------ benefits */
+
+/* A contents page: full-width rules, the claim narrow and heavy on one side,
+   the explanation in a short measure on the other. */
+.benefits__list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--stitch) bottom / 100% 1px no-repeat;
+}
+.benefit {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-1);
+  padding-block: var(--space-3);
+  background: var(--stitch) top / 100% 1px no-repeat;
+  will-change: transform;
+}
+/* cinema.js drives these from the pin's progress; without JS or under
+   reduced motion they simply stay put and fully opaque. */
+@media (prefers-reduced-motion: reduce) {
+  .benefit { transform: none !important; opacity: 1 !important; }
+}
+@media (min-width: 760px) {
+  .benefit {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: var(--space-4);
+    align-items: start;
+  }
+}
+.benefit__head { display: flex; align-items: baseline; gap: 12px; }
+.benefit__head svg {
+  flex: 0 0 auto;
+  width: 16px; height: 16px;
+  stroke-width: 1.5;
+  color: var(--color-accent);
+  transform: translateY(2px);
+}
+.benefit h3 {
+  margin: 0;
+  font-size: var(--text-2xl);
+  max-width: 14ch;
+}
+.benefit p {
+  margin: 0;
+  color: var(--color-muted-foreground);
+  font-size: var(--text-base);
+  max-width: 46ch;
+}
+
+/* ------------------------------------------------------------ steps */
+
+/* The step number is the image of the scene: one huge numeral, the copy set
+   against it rather than centred under it. */
+.steps__scene { justify-content: center; }
+.steps__panel {
+  position: relative;
+  max-width: 640px;
+  margin-inline: auto;
+  text-align: start;
+  padding-block-start: var(--space-5);
+}
+.steps__panel, .steps__no { will-change: transform; }
+.steps__no {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  z-index: -1;
+  font-size: clamp(6rem, 20vw, 15rem);
+  font-weight: 900;
+  line-height: 0.78;
+  color: var(--color-accent);
+  opacity: 0.18;
+  pointer-events: none;
+}
+.steps__panel .steps__title {
+  font-size: var(--text-lg);
+  font-weight: var(--w-label);
+  color: var(--color-muted-foreground);
+  line-height: var(--leading-tight);
+  max-width: none;
+  margin-bottom: var(--space-2);
+}
+.steps__panel h3 {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-2);
+  max-width: 14ch;
+}
+.steps__panel p {
+  color: var(--color-muted-foreground);
+  font-size: clamp(1.05rem, 0.9rem + 0.7vw, 1.3rem);
+  font-weight: var(--w-lead);
+  line-height: 1.6;
+  max-width: 38ch;
+}
+.steps__rail {
+  display: flex;
+  gap: 8px;
+  margin-top: var(--space-5);
+}
+.steps__rail i {
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: color-mix(in srgb, var(--color-foreground) 25%, transparent);
+}
+.steps__rail i.is-active { background: var(--color-accent); }
+
+/* ------------------------------------------------------------ testimonials */
+
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to left, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(to left, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee__track {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-6);
+  width: max-content;
+  will-change: transform;
+}
+.quote {
+  width: min(82vw, 460px);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.quote p {
+  margin: 0;
+  font-size: clamp(1.25rem, 1rem + 1.2vw, 1.75rem);
+  font-weight: var(--w-lead);
+  line-height: 1.5;
+}
+.quote p::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  margin-bottom: var(--space-2);
+  background: var(--color-accent);
+}
+.quote footer {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+  color: var(--color-muted-foreground);
+}
+
+/* ------------------------------------------------------------ faq */
+
+.faq { max-width: var(--container-narrow); }
+.faq details { background: var(--stitch) bottom / 100% 1px no-repeat; }
+.faq details:first-of-type {
+  background: var(--stitch) top / 100% 1px no-repeat, var(--stitch) bottom / 100% 1px no-repeat;
+}
+.faq summary {
+  cursor: pointer;
+  font-size: var(--text-xl);
+  font-weight: var(--w-display);
+  letter-spacing: var(--tracking-display);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding-block: var(--space-2);
+  transition: color var(--dur) var(--ease-out);
+}
+.faq summary:hover { color: var(--color-accent); }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: '';
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  border-inline-start: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(-45deg) translate(2px, -2px);
+  transition: transform var(--dur) var(--ease-out);
+}
+.faq details[open] summary { color: var(--color-accent); }
+.faq details[open] summary::after { transform: rotate(135deg) translate(-2px, 2px); }
+.faq details p {
+  color: var(--color-muted-foreground);
+  max-width: 54ch;
+  padding-bottom: var(--space-3);
+}
+
+/* ------------------------------------------------------------ closing CTA + footer */
+
+/* The last word on the page is set as large as the measure allows. */
+.closing {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  padding-block: var(--space-8);
+}
+.closing > .container { position: relative; z-index: 2; }
+
+/* Mid plane behind the last headline, and a wash that lifts the top edge so
+   the panel reads as a lit stage rather than a flat block of ink. */
+.closing .closing__ghost {
+  position: absolute;
+  z-index: 1;
+  inset-inline-start: -0.06em;
+  bottom: -0.16em;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(7rem, 30vw, 26rem);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: 0;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--color-accent) 60%, transparent);
+  pointer-events: none;
+  will-change: transform;
+}
+.closing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(90% 70% at 70% 0%,
+    color-mix(in srgb, var(--color-accent) 16%, transparent) 0%,
+    transparent 70%);
+}
+.closing h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 1rem + 8vw, 7rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0;
+  margin-bottom: var(--space-4);
+}
+.closing h2::before {
+  content: '\2726';
+  display: inline-block;
+  margin-inline-end: 0.3em;
+  color: var(--color-rose);
+  font-size: 0.35em;
+  vertical-align: 0.8em;
+}
+.closing > .container p {
+  color: var(--color-muted-foreground);
+  font-size: clamp(1.1rem, 0.9rem + 0.9vw, 1.5rem);
+  font-weight: var(--w-lead);
+  line-height: 1.55;
+  max-width: 36ch;
+  padding-top: var(--space-3);
+  background: var(--stitch) top / 100% 1px no-repeat;
+}
+.closing .btn { margin-top: var(--space-5); }
+
+.site-footer {
+  padding-block: var(--space-5);
+  background: var(--stitch) top / 100% 1px no-repeat;
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+  color: var(--color-muted-foreground);
+}
+.site-footer .container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+}
+.social { display: flex; gap: var(--space-3); list-style: none; margin: 0; padding: 0; }
+
+/* ------------------------------------------------------------ forms */
+
+.form { display: grid; gap: var(--space-3); }
+.field { display: grid; gap: 8px; }
+.field label { font-size: var(--text-sm); font-weight: var(--w-label); }
+.field .hint { font-size: var(--text-xs); color: var(--color-muted-foreground); }
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  font: inherit;
+  color: var(--color-foreground);
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  transition: border-color var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out);
+}
+.textarea { min-height: 120px; resize: vertical; line-height: var(--leading-normal); }
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--color-foreground);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-foreground) 12%, transparent);
+}
+.input[aria-invalid='true'],
+.textarea[aria-invalid='true'] { border-color: var(--color-destructive); }
+
+.input--ltr { direction: ltr; text-align: left; }
+
+.field-error {
+  font-size: var(--text-xs);
+  color: var(--color-destructive);
+}
+
+.file-field {
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  text-align: center;
+  background: var(--color-card);
+}
+.file-field input[type='file'] { margin-inline: auto; }
+
+.alert {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  font-size: var(--text-sm);
+}
+.alert--error { border-color: var(--color-destructive); color: var(--color-destructive); background: #fbeeed; }
+.alert--success { border-color: var(--color-success); color: var(--color-success); background: #eef4ef; }
+.alert--info { border-color: var(--color-accent); background: var(--color-accent-soft); color: var(--color-accent); }
+
+.error-summary ul { margin: var(--space-1) 0 0; padding-inline-start: var(--space-3); }
+
+/* payment card block */
+.pay-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+}
+.pay-card__number {
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  direction: ltr;
+  text-align: center;
+}
+.copy-btn { align-self: center; }
+
+/* tracking result */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  font-size: var(--text-sm);
+  font-weight: var(--w-label);
+  border: 1px solid var(--color-border);
+}
+.status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.status--pending { color: #8a5a10; background: #f8f2e4; border-color: #e3d2ad; }
+.status--paid { color: var(--color-success); background: #eef4ef; border-color: #c2d6c7; }
+.status--rejected { color: var(--color-destructive); background: #fbeeed; border-color: #e6c3c0; }
+.status--expired { color: var(--color-muted-foreground); }
+
+.data-list { display: grid; gap: 10px; margin: 0; }
+.data-list div { display: flex; justify-content: space-between; gap: var(--space-2); border-bottom: 1px dashed var(--color-border); padding-bottom: 8px; }
+.data-list dt { color: var(--color-muted-foreground); font-size: var(--text-sm); }
+.data-list dd { margin: 0; font-weight: 500; }
+
+/* page shell for simple pages (order, track, 404) */
+.page {
+  padding-top: calc(var(--header-height) + var(--space-5));
+  padding-bottom: var(--space-7);
+}
+/* Page titles use the same cartouche as the landing page's section heads. */
+.page__title {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  padding: 0.22em 0.75em 0.38em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0;
+  background: var(--color-paper-deep);
+  box-shadow: var(--kitibeh);
+}
+.page__lead {
+  color: var(--color-muted-foreground);
+  font-size: clamp(1.05rem, 0.9rem + 0.7vw, 1.35rem);
+  font-weight: var(--w-lead);
+  line-height: 1.55;
+  max-width: 40ch;
+  margin-bottom: var(--space-5);
+  padding-top: var(--space-3);
+  background: var(--stitch) top / 100% 1px no-repeat;
+}
+
+.panel {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.grid-2 {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 900px) { .grid-2 { grid-template-columns: 1.1fr 0.9fr; align-items: start; } }
+
+/* ------------------------------------------------------------ motion states */
+
+/* Elements start hidden only when JS is available, so no-JS visitors see everything. */
+.js [data-reveal] { opacity: 0; transform: translateY(14px); }
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal].is-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .marquee__track { transform: none !important; }
+}
+
+/* ------------------------------------------------------------ paper grain */
+
+/* A faint fibre grain over the whole page so flat colour reads as paper.
+   Fixed and non-interactive, so it never repaints while scrolling. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.25 0 0 0 0 0.2 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------ phone rhythm */
+
+@media (max-width: 899px) {
+  .section { padding-block: var(--space-6); }
+  .section--tight { padding-block: var(--space-5); }
+  .folio { padding-bottom: var(--space-4); }
+  .section-head { margin-bottom: var(--space-4); }
+  .section-head h2,
+  .about__text > h2 { font-size: clamp(1.9rem, 1.3rem + 3vw, 2.4rem); }
+  .en-caps { letter-spacing: 0.24em; }
+  .faq summary { font-size: var(--text-lg); font-weight: var(--w-label); }
+}

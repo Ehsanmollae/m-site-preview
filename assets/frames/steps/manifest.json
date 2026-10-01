@@ -1,0 +1,6 @@
+{
+  "count": 18,
+  "pattern": "frame_%04d.webp",
+  "width": 1200,
+  "source": "tools/build_art.py steps"
+}
